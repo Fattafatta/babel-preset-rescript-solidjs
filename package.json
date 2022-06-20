@@ -4,13 +4,12 @@
   "description": "Babel preset to transform ReScript code to solidJs.",
   "main": "lib/index.js",
   "module": "mod/index.js",
-  "type": "module",
   "files": [
     "lib",
     "mod"
   ],
   "scripts": {
-    "test": "uvu test .spec.js",
+    "test": "uvu test .spec.mjs",
     "build:lib": "babel src -d lib",
     "build:mod": "BABEL_ENV=buildmodule babel src -d mod",
     "build": "npm run build:lib && npm run build:mod",
