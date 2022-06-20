@@ -1,8 +1,8 @@
 import { test } from "uvu";
 import chai, { expect } from "chai";
 //import * as assert from "uvu/assert";
-import transformTo from "./chai-assertions.js";
-import transformPlugin from "../src/plugins/babel-plugin-transform-rescript-props/index.js";
+import transformTo from "./chai-assertions.mjs";
+import transformPlugin from "../src/plugins/babel-plugin-transform-rescript-props/index.mjs";
 
 chai.use(transformTo({ plugins: [transformPlugin] }));
 
