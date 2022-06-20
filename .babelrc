@@ -1,0 +1,10 @@
+{
+  "env": {
+    "development": {
+      "presets": [ [ "@babel/preset-env", { "modules": "commonjs" } ] ]
+    },
+    "buildmodule": {
+      "presets": [ [ "@babel/preset-env", { "modules": false, "useBuiltIns": "usage", "corejs": "^3.23.1" } ] ]
+    }
+  }
+}

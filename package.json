@@ -1,0 +1,47 @@
+{
+  "name": "@fattafatta/babel-preset-rescript-solidjs",
+  "version": "0.1.0",
+  "description": "Transforms ReScript code to solidJs.",
+  "main": "lib/index.js",
+  "module": "mod/index.js",
+  "type": "module",
+  "files": [
+    "lib",
+    "mod"
+  ],
+  "scripts": {
+    "test": "uvu test .spec.js",
+    "build:lib": "babel src -d lib",
+    "build:mod": "BABEL_ENV=buildmodule babel src -d mod",
+    "build": "npm run build:lib && npm run build:mod",
+    "watch": "babel src -d lib -w",
+    "prepare": "npm run test && npm run build"
+  },
+  "keywords": [
+    "rescript",
+    "solid",
+    "solidjs",
+    "babel",
+    "preset"
+  ],
+  "author": "Fattafatta",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.5",
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/eslint-plugin-development": "^7.17.7",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/types": "^7.18.4",
+    "chai": "^4.3.6",
+    "core-js": "^3.23.1",
+    "eslint": "^8.18.0",
+    "esm": "^3.2.25",
+    "prettier": "^2.7.1",
+    "uvu": "^0.5.3"
+  },
+  "dependencies": {
+    "@fattafatta/babel-plugin-rescript-react-to-jsx": "^0.1.0",
+    "babel-preset-solid": "^1.4.4"
+  }
+}
