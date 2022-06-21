@@ -40,4 +40,10 @@ test("don't remove non-direct assignments", () => {
   );
 });
 
+test("replace props that have a default value", () => {
+  expect("function x(Props) {var a = Props.a !== undefined ? Props.a : 'b'; return a}").to.transformTo(
+    "function x(Props) {return Props.a !== undefined ? Props.a : 'b'}"
+  );
+});
+
 test.run();

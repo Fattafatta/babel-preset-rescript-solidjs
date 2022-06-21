@@ -42,9 +42,22 @@ export default function (babel) {
    * @param {import("@babel/traverse").NodePath} ref reference to a VariableDeclarator
    */
   const replaceRefWithProps = ref => {
+    // don't visit already removed nodes again
+    if (!ref.node) {
+      return;
+    }
     const props = ref.node.init;
-    // only replace direct assignments like "var text = Props.text"
-    if (t.isMemberExpression(props) && t.isIdentifier(props.object, { name: PARAM_NAME })) {
+
+    if (
+      // replace direct assignments like "var text = Props.text"
+      (t.isMemberExpression(props) && t.isIdentifier(props.object, { name: PARAM_NAME })) ||
+      // or replace ConditionalExpressions (props with default value)
+      // like: var text = Props.text !== undefined ? Props.text : "default";
+      (t.isConditionalExpression(props) &&
+        t.isBinaryExpression(props.test) &&
+        t.isMemberExpression(props.test.left) &&
+        t.isIdentifier(props.test.left.object, { name: PARAM_NAME }))
+    ) {
       const id = ref.node.id.name;
       ref.scope.bindings[id].referencePaths.forEach(path => path.replaceWith(props));
 
