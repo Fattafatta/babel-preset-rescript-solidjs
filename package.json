@@ -1,6 +1,6 @@
 {
   "name": "@fattafatta/babel-preset-rescript-solidjs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Babel preset to transform ReScript code to solidJs.",
   "main": "lib/index.js",
   "module": "mod/index.js",
