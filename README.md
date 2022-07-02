@@ -55,8 +55,13 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    dedupe: ['solid-js'],
+  },
 });
 ```
+
+**Note**: Sometimes `vite` bundles parts of the `solidJS` dependencies twice, which results in errors (like lazy components not loading correctly). If you get the warning `You appear to have multiple instances of Solid. This can lead to unexpected behavior.`, use the option `resolve.dedupe` like above and the problem should be fixed.
 
 The babel plugin works with either the `.babelrc` file or by passing the config directly.
 
