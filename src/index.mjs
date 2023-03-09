@@ -3,7 +3,7 @@ import transformProps from "./plugins/babel-plugin-transform-rescript-props";
 import presetSolid from "babel-preset-solid";
 
 export default function (context, options = {}) {
-  const plugins = [transformProps, transformRescriptJSX];
+  const plugins = [transformProps, [transformRescriptJSX, options]];
   const presets = [presetSolid];
 
   return {

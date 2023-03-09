@@ -18,13 +18,24 @@ yarn add @fattafatta/babel-preset-rescript-solidjs --dev
 
 ## Usage
 
+The plugin supports JSX versions 3 and 4. If no version is specified via the `jsx` option, the plugin will default to `v3`. This is analog to the rescript compiler which defaults to "classic" mode.
+
+Short overview of compiler options in `bsconfig.json` and corresponding settings for this plugin:
+
+| rescript compiler settings | babel plugin options |
+| -------- | -------- |
+| `"reason": { "react-jsx": 3 }` | `{"jsx": "v3"}` |
+| `"jsx": { "version": 4 }` | `{"jsx": "v3"}` |
+| `"jsx": { "version": 4, "mode": "classic" }` | `{"jsx": "v3"}` |
+| `"jsx": { "version": 4, "mode": "automatic" }` | `{"jsx": "v4"}` |
+
 ### Via config file
 
 Add this to your `.babelrc`:
 
 ```json
 {
-  "presets": ["@fattafatta/babel-preset-rescript-solidjs"]
+  "presets": [["@fattafatta/babel-preset-rescript-solidjs", {"jsx": "v4"}]]
 }
 ```
 
@@ -51,7 +62,7 @@ export default defineConfig({
     createReScriptPlugin(),
     babel({
       babelConfig: {
-        presets: ["@fattafatta/babel-preset-rescript-solidjs"],
+        presets: [["@fattafatta/babel-preset-rescript-solidjs"], {jsx: "v4"}],
       },
     }),
   ],
@@ -68,7 +79,8 @@ The babel plugin works with either the `.babelrc` file or by passing the config 
 ### Via CLI
 
 Make sure to use the correct file extension when transforming files. ReScript files end on `.bs.js`. But JSX files should use `.jsx`.
+(This will always use jsx v4 since it is not possible to pass preset options via command line)
 
 ```sh
-babel --no-babelrc --presets @fattafatta/babel-preset-rescript-solidjs script.bs.js > script.js
+babel --no-babelrc --presets @fattafatta/babel-preset-rescript-solidjs script.bs.js > script.jsx
 ```
