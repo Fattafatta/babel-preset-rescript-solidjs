@@ -4,7 +4,7 @@ import chai, { expect } from "chai";
 import transformTo from "./chai-assertions.mjs";
 import transformPlugin from "../src/plugins/babel-plugin-transform-rescript-props/index.mjs";
 
-chai.use(transformTo({ plugins: [transformPlugin] }));
+chai.use(transformTo({ plugins: [transformPlugin] }, "transformTo"));
 
 test("only transform components", () => {
   expect("function x() {var a = props.a}").to.transformTo("function x() { var a = props.a }");

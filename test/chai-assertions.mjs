@@ -5,7 +5,7 @@ const formatCode = code => {
   return format(code.replace(/[ \n\r]+/gi, " "), { parser: "babel" });
 };
 
-export default function (babelOptions) {
+export default function (babelOptions, name) {
   function runTransform(source) {
     try {
       return transformSync(source, { babelrc: false, ...babelOptions });
@@ -15,7 +15,7 @@ export default function (babelOptions) {
   }
 
   return function transformTo(chai, utils) {
-    chai.Assertion.addMethod("transformTo", function (expected) {
+    chai.Assertion.addMethod(name, function (expected) {
       const source = utils.flag(this, "object");
       const { code } = runTransform(source);
 
