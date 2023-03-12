@@ -19,6 +19,19 @@ test("don't transform unused props", () => {
 test("replace single property", () => {
   expect("function x(props) {var a = props.a; return a}").to.transformTo("function x(props) { return props.a; }");
 });
+
+test("transform function expressions that are components", () => {
+  expect("var f = function x(props) {var a = props.a; return a}").to.transformTo(
+    "var f = function x(props) { return props.a; }"
+  );
+});
+
+test("ignore function expressions that are not components", () => {
+  expect("var f = function x(obj) {var a = ojb.a; return a}").to.transformTo(
+    "var f = function x(obj) {var a = ojb.a; return a}"
+  );
+});
+
 test("replace multiple properties", () => {
   expect("function x(props) {var a = props.a, b = props.b; return [a, b]}").to.transformTo(
     "function x(props) { return [props.a, props.b]; }"

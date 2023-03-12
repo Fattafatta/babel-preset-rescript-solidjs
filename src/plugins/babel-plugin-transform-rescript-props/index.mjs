@@ -115,7 +115,7 @@ export default function (babel) {
        * We are interested in components that use Props
        * @param {import("@babel/traverse").NodePath} path
        */
-      FunctionDeclaration(path) {
+      "FunctionDeclaration|FunctionExpression"(path) {
         const {
           node: { params },
         } = path;
