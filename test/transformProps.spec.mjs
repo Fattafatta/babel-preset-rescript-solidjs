@@ -7,42 +7,42 @@ import transformPlugin from "../src/plugins/babel-plugin-transform-rescript-prop
 chai.use(transformTo({ plugins: [transformPlugin] }));
 
 test("only transform components", () => {
-  expect("function x() {var a = Props.a}").to.transformTo("function x() { var a = Props.a }");
-  expect("function x(props) {var a = Props.a}").to.transformTo("function x(props) {var a = Props.a}");
-  expect("function x(Props, second) {var a = Props.a}").to.transformTo("function x(Props, second) {var a = Props.a}");
+  expect("function x() {var a = props.a}").to.transformTo("function x() { var a = props.a }");
+  expect("function x(something) {var a = props.a}").to.transformTo("function x(something) {var a = props.a}");
+  expect("function x(props, second) {var a = props.a}").to.transformTo("function x(props, second) {var a = props.a}");
 });
 
 test("don't transform unused props", () => {
-  expect("function x(Props) {}").to.transformTo("function x(Props) {}");
+  expect("function x(props) {}").to.transformTo("function x(props) {}");
 });
 
 test("replace single property", () => {
-  expect("function x(Props) {var a = Props.a; return a}").to.transformTo("function x(Props) { return Props.a; }");
+  expect("function x(props) {var a = props.a; return a}").to.transformTo("function x(props) { return props.a; }");
 });
 test("replace multiple properties", () => {
-  expect("function x(Props) {var a = Props.a, b = Props.b; return [a, b]}").to.transformTo(
-    "function x(Props) { return [Props.a, Props.b]; }"
+  expect("function x(props) {var a = props.a, b = props.b; return [a, b]}").to.transformTo(
+    "function x(props) { return [props.a, props.b]; }"
   );
 });
 
 test("replace prop in binary expression", () => {
-  expect("function x(Props) {var a = Props.a; return a + a}").to.transformTo(
-    "function x(Props) { return Props.a + Props.a; }"
+  expect("function x(props) {var a = props.a; return a + a}").to.transformTo(
+    "function x(props) { return props.a + props.a; }"
   );
 });
 
 test("don't remove non-direct assignments", () => {
-  expect("function x(Props) {var a = Props.a + 'b'; return a}").to.transformTo(
-    "function x(Props) { var a = Props.a + 'b'; return a; }"
+  expect("function x(props) {var a = props.a + 'b'; return a}").to.transformTo(
+    "function x(props) { var a = props.a + 'b'; return a; }"
   );
-  expect("function x(Props) {var a = {b: Props.a}; return a;}").to.transformTo(
-    "function x(Props) { var a = { b: Props.a }; return a; }"
+  expect("function x(props) {var a = {b: props.a}; return a;}").to.transformTo(
+    "function x(props) { var a = { b: props.a }; return a; }"
   );
 });
 
 test("replace props that have a default value", () => {
-  expect("function x(Props) {var a = Props.a !== undefined ? Props.a : 'b'; return a}").to.transformTo(
-    "function x(Props) {return Props.a !== undefined ? Props.a : 'b'}"
+  expect("function x(props) {var a = props.a !== undefined ? props.a : 'b'; return a}").to.transformTo(
+    "function x(props) {return props.a !== undefined ? props.a : 'b'}"
   );
 });
 
