@@ -23,6 +23,7 @@ export default function (babel) {
   const { types: t } = babel;
 
   const PARAM_NAME = "Props";
+  const PARAM_LOWER = "props";
 
   /**
    * We are only interested in references inside a variable declaration.
@@ -50,13 +51,15 @@ export default function (babel) {
 
     if (
       // replace direct assignments like "var text = Props.text"
-      (t.isMemberExpression(props) && t.isIdentifier(props.object, { name: PARAM_NAME })) ||
+      (t.isMemberExpression(props) &&
+        (t.isIdentifier(props.object, { name: PARAM_NAME }) || t.isIdentifier(props.object, { name: PARAM_LOWER }))) ||
       // or replace ConditionalExpressions (props with default value)
       // like: var text = Props.text !== undefined ? Props.text : "default";
       (t.isConditionalExpression(props) &&
         t.isBinaryExpression(props.test) &&
         t.isMemberExpression(props.test.left) &&
-        t.isIdentifier(props.test.left.object, { name: PARAM_NAME }))
+        (t.isIdentifier(props.test.left.object, { name: PARAM_NAME }) ||
+          t.isIdentifier(props.test.left.object, { name: PARAM_LOWER })))
     ) {
       const id = ref.node.id.name;
       ref.scope.bindings[id].referencePaths.forEach(path => path.replaceWith(props));
@@ -74,7 +77,9 @@ export default function (babel) {
    * @param {[string]} params the parameters of a function declaration
    * @returns bool
    */
-  const isRescriptComponent = params => params.length == 1 && t.isIdentifier(params[0], { name: PARAM_NAME });
+  const isRescriptComponent = params =>
+    params.length == 1 &&
+    (t.isIdentifier(params[0], { name: PARAM_NAME }) || t.isIdentifier(params[0], { name: PARAM_LOWER }));
 
   /**
    * Find all variable declarations that reference a prop and replace all occurrences of the declarations with
@@ -85,17 +90,22 @@ export default function (babel) {
   const findAndReplaceVariableReferences = path => {
     const { scope } = path;
 
-    // check if Props is referenced inside the component (or unused)
-    if (!scope.hasOwnBinding(PARAM_NAME)) {
-      return;
+    // check if Props/props is referenced inside the component (or unused)
+    if (scope.hasOwnBinding(PARAM_NAME)) {
+      const pathFromRefs = scope
+        .getBinding(PARAM_NAME)
+        .referencePaths.map(path => findRefInVariableDeclaration(path, scope))
+        .filter(path => path);
+
+      pathFromRefs.forEach(path => replaceRefWithProps(path, scope));
+    } else if (scope.hasOwnBinding(PARAM_LOWER)) {
+      const pathFromRefs = scope
+        .getBinding(PARAM_LOWER)
+        .referencePaths.map(path => findRefInVariableDeclaration(path, scope))
+        .filter(path => path);
+
+      pathFromRefs.forEach(path => replaceRefWithProps(path, scope));
     }
-
-    const pathFromRefs = scope
-      .getBinding(PARAM_NAME)
-      .referencePaths.map(path => findRefInVariableDeclaration(path, scope))
-      .filter(path => path);
-
-    pathFromRefs.forEach(path => replaceRefWithProps(path, scope));
   };
 
   return {
